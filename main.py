@@ -1,18 +1,28 @@
-"""make.fun news-image-20261122 entry: copy the finished image to /output.
+#!/usr/bin/env python3
+"""Entry point for the 22 November 2026 news-image bounty.
 
-The image (entry.png, drawn at build time by draw_image.py) is shipped in
-this repository; this program only copies it, so both graded runs write
-exactly the same bytes. Standard library only, no network.
+Copies the pre-drawn front page (entry.png, shipped in this repo) to
+$MAKEFUN_OUTPUT_DIR/entry.png (default /output). Standard library only,
+no network, fully deterministic: the same bytes are written every run.
 """
+
 import os
 import shutil
+from pathlib import Path
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+HERE = Path(__file__).resolve().parent
 
-os.makedirs(OUT, exist_ok=True)
-src = os.path.join(HERE, "entry.png")
-dst = os.path.join(OUT, "entry.png")
-shutil.copyfile(src, dst)
-assert os.path.getsize(src) == os.path.getsize(dst), "copy size mismatch"
-print("wrote", dst, os.path.getsize(dst), "bytes")
+
+def main():
+    source = HERE / "entry.png"
+    target_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
+    target_dir.mkdir(parents=True, exist_ok=True)
+    target = target_dir / "entry.png"
+    shutil.copyfile(source, target)
+    if target.stat().st_size != source.stat().st_size:
+        raise SystemExit("entry.png copy size mismatch")
+    print(f"wrote {target} ({target.stat().st_size} bytes)")
+
+
+if __name__ == "__main__":
+    main()

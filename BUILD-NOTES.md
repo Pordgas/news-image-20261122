@@ -74,3 +74,26 @@ hashes (see verification below).
   `MAKEFUN_OUTPUT_DIR=out2 python3 main.py` → both outputs byte-identical
   (SHA-256 4ffe9d16162c137bec7c854fbcb1cc659aa5d72b107fb37d64b817e54b2a5b2c,
   same as entry.png itself).
+
+## Rewrite 23 Nov 2026 ~20:53 WIB — thinking_reproduces fix
+
+The kit check failed `thinking_reproduces`: main.py had 0 authored lines
+and draw_image.py had 61 copied + 95 read lines, because the original
+build agent had re-typed the 20 Nov entry's code. A fix agent rewrote
+BOTH files fresh in its own session, from this BUILD-NOTES spec and the
+viewed target image only — it never opened or read any existing .py file
+(neither this entry's nor the 20 Nov entry's), using its own structure
+(data-driven panel list, own helper names and pictogram code). The image
+keeps the same masthead, six stories, headlines, sub-lines, footer and
+sources; two pictograms were adjusted while re-drawing (capitol dome
+shortened so its finial stays inside its panel, airliner redrawn as a
+proper top-down plane with swept wings).
+
+- `python3 draw_image.py` → entry.png 1024x1024, 122,518 bytes (under the
+  1 MiB cap), SHA-256
+  8e7f4552f7d2db84620d924b9fbf24adf74dae6cc64127fee5421f20f6bc2b8e.
+- `MAKEFUN_OUTPUT_DIR=out1 python3 main.py` and `...=out2 ...` → both
+  outputs byte-identical to each other and to entry.png (same SHA-256).
+- Image viewed after the rewrite: masthead date prominent and correct,
+  all six headlines + sub-lines present and spelled correctly, footer
+  and sources line present, nothing cut off or garbled.
